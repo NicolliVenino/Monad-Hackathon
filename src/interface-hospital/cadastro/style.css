@@ -1,0 +1,121 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    background-color: #05b1b8;
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    padding: 20px;
+}
+
+.admin-panel {
+    width: 100%;
+    max-width: 850px;
+    background-color: #f8f9fa;
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+}
+
+.header-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header-section h2 {
+    font-size: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #05b1b8 !important;
+    border-bottom: 4px solid #ecb733;
+    display: inline-block;
+    padding-bottom: 8px;
+}
+
+.form-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.label-text {
+    font-size: 12px;
+    font-weight: 800;
+    color: #05b1b8;
+    text-transform: uppercase;
+}
+
+.input-field {
+    width: 100%;
+    height: 48px;
+    background-color: #ffffff;
+    border: 2px solid #e0e6e6;
+    border-radius: 10px;
+    padding: 0 15px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: #05b1b8;
+    box-shadow: 0 0 8px rgba(5, 177, 184, 0.2);
+}
+
+.vagas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.footer-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+}
+
+.btn-register {
+    background-color:#ffffff;
+    color: #05b1b8;
+    border: 2px solid #ecb733;
+    padding: 15px 60px;
+    border-radius: 40px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.btn-register:hover {
+    background-color: #ecb733;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 2px 10px rgba(236, 183, 51, 0.2);
+}
+
+@media (max-width: 700px) {
+    .form-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-panel {
+        padding: 25px;
+    }
+}

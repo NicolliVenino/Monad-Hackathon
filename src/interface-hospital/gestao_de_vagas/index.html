@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Gestão Hospitalar - Monad</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="web-container">
+        <div class="header-section">
+            <div class="logo-circle"></div>
+            <h2>Gestão de Especialidades</h2>
+        </div>
+
+        <div class="items-grid">
+            <div class="item-card">
+                <div class="label-box">Clínico Geral</div>
+                <div class="counter-group">
+                    <button class="btn-circle" onclick="alterarQuantidade(this, -1)">-</button>
+                    <span class="number-display">0</span>
+                    <button class="btn-circle" onclick="alterarQuantidade(this, 1)">+</button>
+                </div>
+            </div>
+
+            <div class="item-card">
+                <div class="label-box">Pediatria</div>
+                <div class="counter-group">
+                    <button class="btn-circle" onclick="alterarQuantidade(this, -1)">-</button>
+                    <span class="number-display">0</span>
+                    <button class="btn-circle" onclick="alterarQuantidade(this, 1)">+</button>
+                </div>
+            </div>
+
+            <div class="item-card">
+                <div class="label-box">Ortopedia</div>
+                <div class="counter-group">
+                    <button class="btn-circle" onclick="alterarQuantidade(this, -1)">-</button>
+                    <span class="number-display">0</span>
+                    <button class="btn-circle" onclick="alterarQuantidade(this, 1)">+</button>
+                </div>
+            </div>
+
+            <div class="item-card">
+                <div class="label-box">Cardiologia</div>
+                <div class="counter-group">
+                    <button class="btn-circle" onclick="alterarQuantidade(this, -1)">-</button>
+                    <span class="number-display">0</span>
+                    <button class="btn-circle" onclick="alterarQuantidade(this, 1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-actions">
+            <button class="btn-send">Enviar Atualização</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
