@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedIn - Buscar Atendimento</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', 'Helvetica Neue', sans-serif; }
+
+        body {
+            background-color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 400px;
+            min-height: 100vh;
+            background-color: #f7f7f7;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 25px;
+            gap: 32px;
+        }
+
+        .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .logo-wrapper img {
+            width: 100px;
+            height: auto;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .page-title {
+            color: #0d6e7a;
+            font-size: 22px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        label {
+            color: #0d6e7a;
+            font-weight: 900;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            align-self: flex-start;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            border: 1.5px solid #7a7a7a;
+            border-radius: 25px;
+            padding: 12px 15px;
+            background-color: transparent;
+            transition: border-color 0.2s;
+        }
+
+        .input-wrapper:focus-within { border-color: #0d6e7a; }
+
+        .input-wrapper svg { width: 22px; height: 22px; stroke: #666; flex-shrink: 0; }
+
+        .input-wrapper input,
+        .input-wrapper select {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 16px;
+            color: #333;
+            margin-left: 10px;
+        }
+
+        .input-wrapper select { appearance: none; cursor: pointer; }
+        .input-wrapper input::placeholder { color: #999; }
+
+        /* Status blockchain */
+        .blockchain-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #666;
+            width: 100%;
+            padding: 8px 14px;
+            background: #fff;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ccc;
+            flex-shrink: 0;
+            transition: background 0.3s;
+        }
+
+        .status-dot.connected { background: #22c55e; }
+        .status-dot.error { background: #ef4444; }
+        .status-dot.loading { background: #f59e0b; animation: pulse 1s infinite; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        .btn-buscar {
+            margin-top: 4px;
+            padding: 14px 40px;
+            border: 2px solid #0d6e7a;
+            border-radius: 25px;
+            background-color: transparent;
+            color: #0d6e7a;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease-in-out;
+            width: 100%;
+        }
+
+        .btn-buscar:hover { background-color: #0d6e7a; color: #fff; }
+        .btn-buscar:active { transform: scale(0.97); }
+        .btn-buscar:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .nav-hospital {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .nav-hospital a {
+            color: #0d6e7a;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-hospital a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <main class="mobile-container">
+
+        <div class="logo-wrapper">
+            <img src="assets/logoMedIn.jpeg" alt="MedIn Logo">
+        </div>
+
+        <p class="page-title">Buscar Atendimento</p>
+
+        <div class="blockchain-status">
+            <div class="status-dot loading" id="statusDot"></div>
+            <span id="statusText">Verificando conexão com a blockchain...</span>
+        </div>
+
+        <div class="input-group">
+            <label for="atendimento">Tipo de Tratamento</label>
+            <div class="input-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+                <select id="atendimento">
+                    <option value="" selected disabled>Escolha o tratamento</option>
+                    <option value="clinica geral">Clínico Geral</option>
+                    <option value="pediatria">Pediatria</option>
+                    <option value="cardiologista">Cardiologista</option>
+                    <option value="ortopedia">Ortopedia</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="localizacao">Sua Localização</label>
+            <div class="input-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <input type="text" id="localizacao" placeholder="Ex: São Paulo, Campinas...">
+            </div>
+        </div>
+
+        <button type="button" class="btn-buscar" id="btn-buscar">Buscar Hospitais</button>
+
+        <div class="divider"></div>
+
+        <p class="nav-hospital">
+            Você é um hospital? <a href="../interface-hospital/cadastro/index.html">Cadastrar / Gerenciar vagas →</a>
+        </p>
+
+    </main>
+
+    <script src="./ethers.umd.min.js"></script>
+    <script>
+const MONAD_CHAIN_ID = "0x279F";
+const MONAD_NETWORK = {
+    chainId: "0x278F",
+    chainName: "Monad Testnet",
+    nativeCurrency: { name: "MON", symbol: "MON", decimals: 18 },
+    rpcUrls: ["https://testnet-rpc.monad.xyz"],
+    blockExplorerUrls: ["https://testnet.monadexplorer.com"]
+};
+
+async function garantirRedeMonad() {
+    const chainAtual = await window.ethereum.request({ method: "eth_chainId" });
+    if (chainAtual === MONAD_CHAIN_ID) return; // já está na rede certa
+
+    try {
+        await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: MONAD_CHAIN_ID }]
+        });
+    } catch (err) {
+        // Código 4902 = rede não cadastrada na MetaMask ainda
+        if (err.code === 4902) {
+            await window.ethereum.request({
+                method: "wallet_addEthereumChain",
+                params: [MONAD_NETWORK]
+            });
+        } else {
+            throw err;
+        }
+    }
+}
+
+        const CONTRACT_ADDRESS = "0x3e33cF43dFb58a34cB8c95B0fdf20814D4f8a82B";
+        const CONTRACT_ABI = [
+            "function totalHospitais() external view returns (uint256)"
+        ];
+
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const btnBuscar = document.getElementById('btn-buscar');
+
+        // Aguarda a MetaMask injetar window.ethereum (pode demorar alguns ms)
+        function aguardarEthereum(tentativas = 30) {
+            return new Promise((resolve) => {
+                if (typeof window.ethereum !== 'undefined') {
+                    return resolve(true);
+                }
+                let tentativa = 0;
+                const intervalo = setInterval(() => {
+                    tentativa++;
+                    if (typeof window.ethereum !== 'undefined') {
+                        clearInterval(intervalo);
+                        resolve(true);
+                    } else if (tentativa >= tentativas) {
+                        clearInterval(intervalo);
+                        resolve(false);
+                    }
+                }, 100); // verifica a cada 100ms, até 1 segundo
+            });
+        }
+
+        async function verificarConexao() {
+            try {
+                const encontrou = await aguardarEthereum();
+                if (!encontrou) {
+                    throw new Error('MetaMask não encontrada');
+                }
+                await garantirRedeMonad();
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+                const total = await contract.totalHospitais();
+                statusDot.className = 'status-dot connected';
+                statusText.textContent = `Blockchain conectada · ${Number(total)} hospital(is) cadastrado(s)`;
+            } catch (err) {
+                statusDot.className = 'status-dot error';
+                // Distingue erro de "sem MetaMask" de outros erros de rede
+                if (!window.ethereum) {
+                    statusText.textContent = 'MetaMask não encontrada. Instale a extensão para continuar.';
+                    btnBuscar.disabled = true;
+                } else {
+                    statusText.textContent = 'MetaMask encontrada, mas houve erro ao consultar a rede. Verifique se está na rede correta.';
+                    // Não desabilita o botão — o usuário pode tentar buscar mesmo assim
+                }
+            }
+        }
+
+        function normalizarTexto(valor) {
+            return (valor || '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim()
+                .toLowerCase();
+        }
+
+        function obterCoordenadas(localizacaoTexto) {
+            const texto = normalizarTexto(localizacaoTexto);
+            if (texto.includes('sao paulo')) return { lat: -23.5505, lon: -46.6333 };
+            if (texto.includes('santos')) return { lat: -23.9608, lon: -46.3336 };
+            if (texto.includes('campinas')) return { lat: -22.9099, lon: -47.0626 };
+            if (texto.includes('taubate') || texto.includes('taubaté')) return { lat: -23.0256, lon: -45.5554 };
+            if (texto.includes('sorocaba')) return { lat: -23.5015, lon: -47.4526 };
+            return { lat: -23.5505, lon: -46.6333 }; // fallback SP
+        }
+
+        btnBuscar.addEventListener('click', function () {
+            const categoriaSelecionada = document.getElementById('atendimento').value;
+            if (!categoriaSelecionada) {
+                alert('Selecione o tipo de tratamento para continuar.');
+                return;
+            }
+
+            const localizacaoTexto = document.getElementById('localizacao').value || 'Sao Paulo';
+            const coords = obterCoordenadas(localizacaoTexto);
+
+            localStorage.setItem('categoriaBusca', categoriaSelecionada);
+            localStorage.setItem('localizacaoTexto', localizacaoTexto);
+            localStorage.setItem('userLat', String(coords.lat));
+            localStorage.setItem('userLon', String(coords.lon));
+
+            window.location.href = 'consulta.html';
+        });
+
+        verificarConexao();
+    </script>
+</body>
+</html>

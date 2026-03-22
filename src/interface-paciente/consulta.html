@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedIn - Resultados</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+
+        body {
+            background-color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 400px;
+            min-height: 100vh;
+            background-color: #f7f7f7;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Header com logo e voltar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .btn-voltar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: none;
+            border: none;
+            color: #0d6e7a;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            padding: 8px 0;
+        }
+
+        .btn-voltar:hover { text-decoration: underline; }
+
+        .top-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        /* Card de resumo */
+        .summary-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px 18px;
+            border: 1.5px solid #b2dfdb;
+        }
+
+        .summary-card h3 {
+            color: #006064;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .summary-line {
+            color: #00838f;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .summary-line span {
+            font-weight: 700;
+            color: #006064;
+        }
+
+        /* Estado de loading / erro */
+        .state-msg {
+            text-align: center;
+            padding: 40px 20px;
+            color: #00838f;
+            font-weight: 600;
+        }
+
+        .state-msg.error { color: #c62828; }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #b2dfdb;
+            border-top-color: #0d6e7a;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Cards dos hospitais */
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .hospital-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            border-left: 4px solid #9e9e9e;
+            position: relative;
+        }
+
+        .hospital-card.top { border-left-color: #fbc02d; }
+
+        .badge-top {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            background: #fbc02d;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .hospital-card h2 {
+            color: #006064;
+            font-size: 15px;
+            margin-bottom: 10px;
+            padding-right: 60px;
+        }
+
+        .detail-line {
+            color: #00838f;
+            font-size: 13px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .detail-line strong { color: #004d40; }
+
+        .score-bar {
+            margin-top: 10px;
+            height: 4px;
+            background: #e0f2f1;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0d6e7a, #22c55e);
+            border-radius: 2px;
+            transition: width 0.8s ease;
+        }
+
+        .divider { height: 1px; background: #ddd; }
+
+        /* Sem resultados */
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+
+        <div class="top-bar">
+            <button class="btn-voltar" onclick="window.location.href='index.html'">
+                ← Nova Busca
+            </button>
+            <img src="assets/logoMedIn.jpeg" alt="MedIn" class="top-logo">
+        </div>
+
+        <div class="summary-card">
+            <h3>Resumo da Busca</h3>
+            <p class="summary-line">Tratamento: <span id="resumo-categoria">—</span></p>
+            <p class="summary-line">Localização: <span id="resumo-local">—</span></p>
+            <p class="summary-line">Maior oferta encontrada: <span id="resumo-oferta">—</span> vaga(s)</p>
+        </div>
+
+        <div id="resultados-container">
+            <div class="state-msg">
+                <div class="spinner"></div>
+                <br>Buscando melhores opções na blockchain...
+            </div>
+        </div>
+
+    </div>
+
+    <script src="./ethers.umd.min.js"></script>
+    <script>
+const MONAD_CHAIN_ID = "0x279F"; // 10143 decimal
+const MONAD_NETWORK = {
+    chainId: "0x278F",
+    chainName: "Monad Testnet",
+    nativeCurrency: { name: "MON", symbol: "MON", decimals: 18 },
+    rpcUrls: ["https://testnet-rpc.monad.xyz"],
+    blockExplorerUrls: ["https://testnet.monadexplorer.com"]
+};
+
+async function garantirRedeMonad() {
+    const chainAtual = await window.ethereum.request({ method: "eth_chainId" });
+    if (chainAtual === MONAD_CHAIN_ID) return; // já está na rede certa
+
+    try {
+        await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: MONAD_CHAIN_ID }]
+        });
+    } catch (err) {
+        // Código 4902 = rede não cadastrada na MetaMask ainda
+        if (err.code === 4902) {
+            await window.ethereum.request({
+                method: "wallet_addEthereumChain",
+                params: [MONAD_NETWORK]
+            });
+        } else {
+            throw err;
+        }
+    }
+}
+
+        const CONTRACT_ADDRESS = "0x3e33cF43dFb58a34cB8c95B0fdf20814D4f8a82B";
+        const CONTRACT_ABI = [
+            "function totalHospitais() external view returns (uint256)",
+            "function obterHospital(uint256 id) external view returns ((uint256 id, string nome, string localizacao, address wallet, (uint256 geral, uint256 pediatria, uint256 ortopedia, uint256 cardio) vagas, uint256 criadoEm))"
+        ];
+
+        function normalizarTexto(valor) {
+            return (valor || "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim()
+                .toLowerCase();
+        }
+
+        function coordenadasDoHospital(localizacao) {
+            const texto = normalizarTexto(localizacao);
+            if (texto.includes("sao paulo")) return { lat: -23.5505, lon: -46.6333 };
+            if (texto.includes("santos")) return { lat: -23.9608, lon: -46.3336 };
+            if (texto.includes("campinas")) return { lat: -22.9099, lon: -47.0626 };
+            if (texto.includes("taubate")) return { lat: -23.0256, lon: -45.5554 };
+            if (texto.includes("sorocaba")) return { lat: -23.5015, lon: -47.4526 };
+            return { lat: -23.5505, lon: -46.6333 };
+        }
+
+        function calcularDistanciaKm(latA, lonA, latB, lonB) {
+            const R = 6371;
+            const dLat = (latB - latA) * (Math.PI / 180);
+            const dLon = (lonB - lonA) * (Math.PI / 180);
+            const a =
+                Math.sin(dLat / 2) ** 2 +
+                Math.cos(latA * Math.PI / 180) * Math.cos(latB * Math.PI / 180) *
+                Math.sin(dLon / 2) ** 2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        function obterCampoVagas(vagasStruct, categoria) {
+            if (categoria === "clinica geral") return Number(vagasStruct.geral);
+            if (categoria === "pediatria") return Number(vagasStruct.pediatria);
+            if (categoria === "ortopedia") return Number(vagasStruct.ortopedia);
+            if (categoria === "cardiologista") return Number(vagasStruct.cardio);
+            return Number(vagasStruct.geral);
+        }
+
+        async function montarRankingBlockchain(latUser, lonUser, categoria) {
+            if (typeof window.ethereum === "undefined") {
+                throw new Error("MetaMask não encontrada no navegador.");
+            }
+
+            await garantirRedeMonad();
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+
+            const total = Number(await contract.totalHospitais());
+
+            if (total === 0) {
+                return { categoria_utilizada: categoria, maior_vaga_categoria: 0, ranking: [] };
+            }
+
+            const hospitais = [];
+
+            for (let id = 1; id <= total; id++) {
+                const h = await contract.obterHospital(id);
+                const vagas = obterCampoVagas(h.vagas, categoria);
+                if (vagas <= 0) continue;
+
+                const coords = coordenadasDoHospital(h.localizacao);
+                const distanciaKm = calcularDistanciaKm(latUser, lonUser, coords.lat, coords.lon);
+
+                hospitais.push({
+                    nome: h.nome,
+                    localizacao: h.localizacao,
+                    vagas,
+                    distancia_km: Number(distanciaKm.toFixed(2))
+                });
+            }
+
+            if (hospitais.length === 0) {
+                return { categoria_utilizada: categoria, maior_vaga_categoria: 0, ranking: [] };
+            }
+
+            const maxVagas = Math.max(...hospitais.map(h => h.vagas));
+            const maxDistancia = Math.max(...hospitais.map(h => h.distancia_km)) || 1;
+
+            const ranking = hospitais.map(h => {
+                const scoreDistancia = 1 - (h.distancia_km / maxDistancia);
+                const scoreVagas = h.vagas / maxVagas;
+                const scoreBase = (scoreVagas * 0.55) + (scoreDistancia * 0.45);
+                return { ...h, score_base: scoreBase, diferenca_vagas: maxVagas - h.vagas };
+            });
+
+            const maxScore = Math.max(...ranking.map(h => h.score_base));
+            const minScore = Math.min(...ranking.map(h => h.score_base));
+
+            ranking.forEach(h => {
+                h.score_final = maxScore === minScore
+                    ? 10
+                    : Number(((h.score_base - minScore) / (maxScore - minScore) * 10).toFixed(2));
+            });
+
+            ranking.sort((a, b) => b.score_final - a.score_final || b.vagas - a.vagas);
+
+            return { categoria_utilizada: categoria, maior_vaga_categoria: maxVagas, ranking };
+        }
+
+        function desenharCartoes(hospitais) {
+            const container = document.getElementById('resultados-container');
+            container.innerHTML = '';
+
+            if (hospitais.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>Nenhum hospital com vagas disponíveis para essa especialidade.</p>
+                        <br>
+                        <button onclick="window.location.href='index.html'" style="color:#0d6e7a;background:none;border:none;cursor:pointer;font-weight:700;text-decoration:underline;">
+                            ← Voltar e tentar outra especialidade
+                        </button>
+                    </div>`;
+                return;
+            }
+
+            const lista = document.createElement('div');
+            lista.className = 'results-list';
+
+            hospitais.forEach((h, i) => {
+                const card = document.createElement('div');
+                card.className = `hospital-card${i === 0 ? ' top' : ''}`;
+
+                card.innerHTML = `
+                    ${i === 0 ? '<span class="badge-top">⭐ Melhor opção</span>' : ''}
+                    <h2>${h.nome.toUpperCase()}</h2>
+                    <p class="detail-line"><span>📍 Localização</span> <strong>${h.localizacao}</strong></p>
+                    <p class="detail-line"><span>🛏 Vagas disponíveis</span> <strong>${h.vagas}</strong></p>
+                    <p class="detail-line"><span>📏 Distância</span> <strong>${h.distancia_km} km</strong></p>
+                    <p class="detail-line"><span>📊 Score do algoritmo</span> <strong>${h.score_final}/10</strong></p>
+                    <div class="score-bar"><div class="score-fill" style="width:${h.score_final * 10}%"></div></div>
+                `;
+
+                lista.appendChild(card);
+
+                if (i < hospitais.length - 1) {
+                    const div = document.createElement('div');
+                    div.className = 'divider';
+                    lista.appendChild(div);
+                }
+            });
+
+            container.appendChild(lista);
+        }
+
+        window.onload = async function () {
+            const categoria = localStorage.getItem('categoriaBusca') || 'clinica geral';
+            const localizacaoTexto = localStorage.getItem('localizacaoTexto') || 'São Paulo';
+            const lat = parseFloat(localStorage.getItem('userLat')) || -23.5505;
+            const lon = parseFloat(localStorage.getItem('userLon')) || -46.6333;
+
+            // Preenche resumo
+            const nomes = {
+                'clinica geral': 'Clínico Geral',
+                'pediatria': 'Pediatria',
+                'cardiologista': 'Cardiologista',
+                'ortopedia': 'Ortopedia'
+            };
+            document.getElementById('resumo-categoria').textContent = nomes[categoria] || categoria;
+            document.getElementById('resumo-local').textContent = localizacaoTexto;
+
+            try {
+                const payload = await montarRankingBlockchain(lat, lon, categoria);
+                document.getElementById('resumo-oferta').textContent = payload.maior_vaga_categoria;
+                desenharCartoes(payload.ranking);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('resultados-container').innerHTML = `
+                    <div class="state-msg error">
+                        ⚠️ Erro ao consultar a blockchain.<br><br>
+                        <small>${err.message}</small><br><br>
+                        <button onclick="window.location.href='index.html'" style="color:#c62828;background:none;border:none;cursor:pointer;font-weight:700;text-decoration:underline;">
+                            ← Voltar
+                        </button>
+                    </div>`;
+            }
+        };
+    </script>
+</body>
+</html>

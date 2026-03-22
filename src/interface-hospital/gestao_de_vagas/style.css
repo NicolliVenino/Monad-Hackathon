@@ -1,0 +1,276 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+    background-color: #05b1b8;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 30px 20px;
+}
+
+.web-container {
+    width: 100%;
+    max-width: 900px;
+    background-color: #f5f5f7;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Header */
+.header-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.logo-circle {
+    width: 90px;
+    height: 90px;
+    background-image: url('assets/logoMedIn.jpeg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    margin-bottom: 12px;
+}
+
+.header-section h2 {
+    color: #05b1b8;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 22px;
+    margin-bottom: 14px;
+}
+
+.header-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-nav {
+    color: #05b1b8;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border: 1.5px solid #05b1b8;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+.btn-nav:hover {
+    background: #05b1b8;
+    color: #fff;
+}
+
+/* Blockchain status */
+.blockchain-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #555;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-bottom: 24px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+    flex-shrink: 0;
+    transition: background 0.3s;
+}
+
+.status-dot.connected { background: #22c55e; }
+.status-dot.error { background: #ef4444; }
+.status-dot.loading { background: #f59e0b; animation: pulse 1s infinite; }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* Hospital ID input */
+.hospital-meta {
+    margin: 0 auto 28px;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hospital-meta label {
+    color: #05b1b8;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 12px;
+}
+
+.id-input-row {
+    display: flex;
+    gap: 10px;
+}
+
+.hospital-meta input {
+    flex: 1;
+    border: 1.5px solid #cfd8dc;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.hospital-meta input:focus {
+    border-color: #05b1b8;
+    box-shadow: 0 0 0 3px rgba(5, 177, 184, 0.15);
+}
+
+.field-hint {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Grid de vagas */
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.item-card {
+    background-color: #ffffff;
+    padding: 16px 20px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1.5px solid #e0e0e0;
+    transition: border-color 0.2s;
+}
+
+.item-card:hover { border-color: #05b1b8; }
+
+.label-box {
+    color: #05b1b8;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+.counter-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-circle {
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    color: #05b1b8;
+    border: 2px solid #05b1b8;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 2px;
+    transition: 0.2s;
+}
+
+.btn-circle:hover {
+    background-color: #05b1b8;
+    color: white;
+}
+
+.number-display {
+    font-size: 20px;
+    font-weight: 700;
+    min-width: 36px;
+    text-align: center;
+    color: #333;
+}
+
+/* Footer */
+.footer-actions {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.status-msg {
+    min-height: 24px;
+    margin-top: 14px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #22505a;
+}
+
+.btn-send {
+    background-color: #ffffff;
+    color: #05b1b8;
+    border: 2px solid #ecb733;
+    padding: 14px 36px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.btn-send.secondary {
+    border-color: #05b1b8;
+    padding: 12px 20px;
+    font-size: 14px;
+}
+
+.btn-send.secondary:hover {
+    background-color: #05b1b8;
+    color: #ffffff;
+}
+
+.btn-send:hover {
+    background-color: #ecb733;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(236, 183, 51, 0.3);
+}
+
+.btn-send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 600px) {
+    .items-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .web-container {
+        padding: 24px 16px;
+    }
+
+    body {
+        padding: 16px 10px;
+    }
+}

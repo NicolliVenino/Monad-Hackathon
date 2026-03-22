@@ -1,0 +1,269 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    background-color: #05b1b8;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 20px;
+    min-height: 100vh;
+}
+
+.admin-panel {
+    width: 100%;
+    max-width: 850px;
+    background-color: #f8f9fa;
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+}
+
+/* Header */
+.header-section {
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.btn-back {
+    display: inline-block;
+    color: #05b1b8;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    padding: 6px 14px;
+    border: 1.5px solid #05b1b8;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+.btn-back:hover {
+    background: #05b1b8;
+    color: #fff;
+}
+
+.header-section h2 {
+    font-size: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #05b1b8;
+    border-bottom: 4px solid #ecb733;
+    display: inline-block;
+    padding-bottom: 8px;
+}
+
+.header-sub {
+    color: #888;
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+/* Blockchain status */
+.blockchain-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #555;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-bottom: 28px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+    flex-shrink: 0;
+    transition: background 0.3s;
+}
+
+.status-dot.connected { background: #22c55e; }
+.status-dot.error { background: #ef4444; }
+.status-dot.loading { background: #f59e0b; animation: pulse 1s infinite; }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* Form */
+.form-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.label-text {
+    font-size: 12px;
+    font-weight: 800;
+    color: #05b1b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-field {
+    width: 100%;
+    height: 48px;
+    background-color: #ffffff;
+    border: 2px solid #e0e6e6;
+    border-radius: 10px;
+    padding: 0 15px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: #05b1b8;
+    box-shadow: 0 0 8px rgba(5, 177, 184, 0.2);
+}
+
+.field-hint {
+    font-size: 11px;
+    color: #999;
+    margin-top: -6px;
+}
+
+.vagas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.vaga-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.vaga-label {
+    font-size: 11px;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Footer */
+.footer-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+}
+
+.btn-register {
+    background-color: #ffffff;
+    color: #05b1b8;
+    border: 2px solid #ecb733;
+    padding: 15px 60px;
+    border-radius: 40px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.btn-register:hover {
+    background-color: #ecb733;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(236, 183, 51, 0.3);
+}
+
+.btn-register:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.status-msg {
+    min-height: 24px;
+    margin-top: 16px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #22505a;
+}
+
+/* Link para gestão após cadastro */
+.link-gestao {
+    margin-top: 20px;
+    text-align: center;
+    padding: 20px;
+    background: #e8f5e9;
+    border-radius: 12px;
+    border: 1px solid #a5d6a7;
+}
+
+.link-gestao p {
+    color: #2e7d32;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.btn-link-gestao {
+    display: inline-block;
+    background: #05b1b8;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.btn-link-gestao:hover {
+    background: #038a90;
+    transform: translateY(-2px);
+}
+
+/* Nav links */
+.nav-links {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+}
+
+.nav-links a {
+    color: #05b1b8;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.nav-links a:hover { text-decoration: underline; }
+
+@media (max-width: 700px) {
+    .form-container {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-panel {
+        padding: 25px;
+    }
+
+    body {
+        padding: 20px 12px;
+    }
+}

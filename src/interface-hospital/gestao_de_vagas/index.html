@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedIn - Gestão de Vagas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="web-container">
+
+        <div class="header-section">
+            <div class="logo-circle"></div>
+            <h2>Gestão de Especialidades</h2>
+            <div class="header-nav">
+                <a href="../cadastro/index.html" class="btn-nav">← Cadastro</a>
+                <a href="../../interface-paciente/index.html" class="btn-nav">App Paciente</a>
+            </div>
+        </div>
+
+        <!-- Blockchain status -->
+        <div class="blockchain-status" id="blockchainStatus">
+            <div class="status-dot loading" id="statusDot"></div>
+            <span id="statusText">Verificando conexão com MetaMask...</span>
+        </div>
+
+        <!-- ID do hospital -->
+        <div class="hospital-meta">
+            <label for="hospitalIdInput">ID do Hospital na Blockchain</label>
+            <div class="id-input-row">
+                <input id="hospitalIdInput" type="number" min="1" placeholder="Ex.: 1">
+                <button class="btn-send secondary" id="btnCarregar">Carregar</button>
+            </div>
+            <p class="field-hint" id="hospitalNomeInfo">Preencha o ID e clique em Carregar para ver os dados atuais.</p>
+        </div>
+
+        <div class="items-grid">
+            <div class="item-card">
+                <div class="label-box">Clínico Geral</div>
+                <div class="counter-group">
+                    <button class="btn-circle" onclick="alterarQuantidade(this, -1)">-</button>
+                    <span class="number-display" id="displayGeral">0</span>
+                    <button class="btn-circle" onclick="alterarQuantidade(this, 1)">+</button>
+                </div>
+            </div>
+
+            <div class="item-card">
+                <div class="label-box">Pediatria</div>
+                <div class="counter-group">
+                    <button class="btn-circle" onclick="alterarQuantidade(this, -1)">-</button>
+                    <span class="number-display" id="displayPediatria">0</span>
+                    <button class="btn-circle" onclick="alterarQuantidade(this, 1)">+</button>
+                </div>
+            </div>
+
+            <div class="item-card">
+                <div class="label-box">Ortopedia</div>
+                <div class="counter-group">
+                    <button class="btn-circle" onclick="alterarQuantidade(this, -1)">-</button>
+                    <span class="number-display" id="displayOrtopedia">0</span>
+                    <button class="btn-circle" onclick="alterarQuantidade(this, 1)">+</button>
+                </div>
+            </div>
+
+            <div class="item-card">
+                <div class="label-box">Cardiologia</div>
+                <div class="counter-group">
+                    <button class="btn-circle" onclick="alterarQuantidade(this, -1)">-</button>
+                    <span class="number-display" id="displayCardio">0</span>
+                    <button class="btn-circle" onclick="alterarQuantidade(this, 1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-actions">
+            <button class="btn-send" id="btnEnviar">Salvar na Blockchain</button>
+        </div>
+
+        <p id="statusEnvio" class="status-msg" aria-live="polite"></p>
+
+    </div>
+
+    <script src="./ethers.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
